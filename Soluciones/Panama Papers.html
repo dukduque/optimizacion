@@ -606,6 +606,72 @@ x_{i\ l}:&amp;\begin{cases}1\text{,}&amp;\text{ si se asigna a la persona }i\in 
 </div>
 <div class="section" id="formulacion-matematica-completa">
 <h2>Formulación matemática completa<a class="headerlink" href="#formulacion-matematica-completa" title="Permalink to this headline">¶</a></h2>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+    I:&amp; \text{ conjunto de empresas involucradas.}\\
+    O:&amp; \text{ conjunto de empresas }\textit{offshore.}\\
+    P:&amp; \text{ conjunto de paises eficientes en procesos de enjuiciamiento.}\\
+    T:&amp; \text{ conjunto de años desde la creación de la empresa más antigua hasta el 2021.}\\
+    L:&amp; \text{ conjunto de posiciones de la lista definitiva. } L = \{1,\cdots,100\}.
+\end{align}
+\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+    E_{i}:&amp; \text{ conjunto de empresas relacionadas a la persona } i \in I.\\
+\end{align}
+\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+    c_{j}:&amp; \text{ año de creación de la empresa } j\in O.\\
+    a_{j\ t}:&amp; \text{ activos financieros en cada año } t\in T \text{ de la empresa } j \in E \text{ tal que }t\geq c_{j}.\\
+    p_{i}:&amp; \text{ país de procedencia de la persona } i\in I.\\
+    f_{i\ k}:&amp; \text{ indicador binario de valor 1 si la persona } i\in I \text{ es familiar de la persona } k\in I\text{. 0 de lo contrario.}\\
+    por:&amp; \text{ porcentaje de personas en la lista cuyo país de origen pertenece al conjunto }P.
+\end{align}
+\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[
+\begin{align}
+    \sum_{i\in I}x_{i\ l} &amp;= 1, &amp;\forall l\in L.
+\end{align}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\begin{align}
+    \sum_{l\in L}x_{i\ l} &amp;\leq 1, &amp;\forall i\in I.
+\end{align}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\begin{align}
+    \sum_{i\in I|p_{i}\in P}\sum_{l\in L}x_{i\ l} &amp;\geq por\% \cdot \sum_{i\in I}\sum_{l\in L}x_{i\ l}.
+\end{align}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\begin{align}
+    \sum_{k\in I}f_{i\ k} \cdot \sum_{l\in L}x_{i\ l} &amp;\leq \sum_{k\in I}\sum_{l\in L}f_{i\ k} x_{k\ l} , &amp;\forall i\in I.
+\end{align}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\begin{align}
+    \sum_{i\in I}\min_{j\in E_{i}}\{ c_{j} \}\cdot x_{i\ l} &amp;\leq \sum_{i\in I}\min_{j\in E_{i}}\{ c_{j} \}\cdot x_{i\ l+1} , &amp;\forall l\in L | l &lt; |L|.
+\end{align}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\begin{align}
+    x_{i\ l} &amp;\in \{0,1\}, &amp;\forall i\in I,\ l\in L.
+\end{align}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+      \min \sum_{i\in I}\sum_{l\in L}\left(l \cdot x_{i\ l} \cdot \sum_{j\in E_{i}}\frac{\sum_{t\in T|t\geq c_{j}}a_{j\ t}}{2021 - c_{j}}\right ).
+\]</div>
 </div>
 <div class="section" id="implementacion">
 <h2>Implementación<a class="headerlink" href="#implementacion" title="Permalink to this headline">¶</a></h2>
@@ -620,7 +686,7 @@ x_{i\ l}:&amp;\begin{cases}1\text{,}&amp;\text{ si se asigna a la persona }i\in 
 <span class="c1"># Conjuntos</span>
 <span class="c1">#-----------------</span>
 <span class="c1"># Personas involucradas</span>
-<span class="n">I</span> <span class="o">=</span> <span class="p">[</span> <span class="p">]</span>
+<span class="n">I</span> <span class="o">=</span> <span class="p">[</span> <span class="s2">&quot;Alfaima&quot;</span><span class="p">,</span> <span class="s2">&quot;Juanfe&quot;</span><span class="p">,</span> <span class="s2">&quot;Sofia&quot;</span><span class="p">,</span> <span class="s2">&quot;Valentina&quot;</span> <span class="p">]</span>
 
 <span class="c1"># Empresas Offshore</span>
 <span class="n">O</span> <span class="o">=</span> <span class="p">[</span> <span class="p">]</span>
@@ -653,7 +719,7 @@ x_{i\ l}:&amp;\begin{cases}1\text{,}&amp;\text{ si se asigna a la persona }i\in 
 <span class="n">p</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="s2">&quot;&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">I</span><span class="p">}</span>
 
 <span class="c1"># 1 si la persona i en I es familiar de la persona k en K. 0 d.l.c.</span>
-<span class="n">f</span> <span class="o">=</span> <span class="p">{(</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">I</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">K</span><span class="p">}</span>
+<span class="n">f</span> <span class="o">=</span> <span class="p">{(</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">I</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">I</span><span class="p">}</span>
 
 <span class="c1"># porcentaje de personas en la lista cuyo país de origen debe pertenecer al conjunto P</span>
 <span class="n">por</span> <span class="o">=</span> <span class="mi">80</span>
@@ -673,7 +739,7 @@ x_{i\ l}:&amp;\begin{cases}1\text{,}&amp;\text{ si se asigna a la persona }i\in 
 <span class="c1"># Función objetivo</span>
 <span class="c1">#-----------------------------</span>
 <span class="c1"># Crea la expresión que busca ordenar de forma ascendiente los activos promedios anuales.</span>
-<span class="n">prob</span> <span class="o">+=</span> <span class="n">lp</span><span class="o">.</span><span class="n">lpSum</span><span class="p">(</span><span class="n">l</span> <span class="o">*</span> <span class="n">x</span><span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">l</span><span class="p">)]</span> <span class="o">*</span> <span class="n">lp</span><span class="o">.</span><span class="n">lpsum</span><span class="p">(</span><span class="n">a</span><span class="p">[(</span><span class="n">j</span><span class="p">,</span> <span class="n">t</span><span class="p">)]</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2021</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">E</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">T</span> <span class="k">if</span> <span class="n">t</span> <span class="o">&gt;=</span> <span class="n">c</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">I</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">L</span><span class="p">)</span>
+<span class="n">prob</span> <span class="o">+=</span> <span class="n">lp</span><span class="o">.</span><span class="n">lpSum</span><span class="p">(</span><span class="n">l</span> <span class="o">*</span> <span class="n">x</span><span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">l</span><span class="p">)]</span> <span class="o">*</span> <span class="n">lp</span><span class="o">.</span><span class="n">lpSum</span><span class="p">(</span><span class="n">a</span><span class="p">[(</span><span class="n">j</span><span class="p">,</span> <span class="n">t</span><span class="p">)]</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2021</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">E</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">T</span> <span class="k">if</span> <span class="n">t</span> <span class="o">&gt;=</span> <span class="n">c</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">I</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">L</span><span class="p">)</span>
 
 <span class="c1">#-----------------------------</span>
 <span class="c1"># Restricciones</span>
@@ -691,7 +757,7 @@ x_{i\ l}:&amp;\begin{cases}1\text{,}&amp;\text{ si se asigna a la persona }i\in 
 
 <span class="c1"># Si una persona se agrega a la lista, entonces todos sus familiares deben estar en la lista.</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">I</span><span class="p">:</span>
-    <span class="n">prob</span> <span class="o">+=</span> <span class="n">lp</span><span class="o">.</span><span class="n">lpSum</span><span class="p">(</span><span class="n">f</span><span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">)]</span> <span class="o">*</span> <span class="n">lp</span><span class="o">.</span><span class="n">lpsum</span><span class="p">(</span><span class="n">x</span><span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">l</span><span class="p">)]</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">L</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">I</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">lp</span><span class="o">.</span><span class="n">lpSum</span><span class="p">(</span><span class="n">f</span><span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">)]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">I</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">L</span><span class="p">)</span>
+    <span class="n">prob</span> <span class="o">+=</span> <span class="n">lp</span><span class="o">.</span><span class="n">lpSum</span><span class="p">(</span><span class="n">f</span><span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">)]</span> <span class="o">*</span> <span class="n">lp</span><span class="o">.</span><span class="n">lpSum</span><span class="p">(</span><span class="n">x</span><span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">l</span><span class="p">)]</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">L</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">I</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">lp</span><span class="o">.</span><span class="n">lpSum</span><span class="p">(</span><span class="n">f</span><span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">)]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">I</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">L</span><span class="p">)</span>
 
 <span class="c1"># El orden de la lista debe ser ascendiente según el año en que se creó la compañía más antigua relacionada con la persona asignada.</span>
 <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">L</span><span class="p">:</span>
@@ -719,7 +785,37 @@ x_{i\ l}:&amp;\begin{cases}1\text{,}&amp;\text{ si se asigna a la persona }i\in 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Estado (optimizador): Infeasible
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ValueError</span><span class="g g-Whitespace">                                </span>Traceback (most recent call last)
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">7</span><span class="o">-</span><span class="mi">395793</span><span class="n">aa8ffb</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="g g-Whitespace">     </span><span class="mi">83</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">L</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">84</span>     <span class="k">if</span> <span class="n">l</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">L</span><span class="p">):</span>
+<span class="nn">---&gt; 85         prob += lp.lpSum(min([c[j] for j in E[i]]) * x[i, l] for i</span> in <span class="ni">I) &lt;= lp.lpSum(min</span><span class="nt">([c[j] for j in E[i]]) * x[i, l + 1] for i in I)</span>
+<span class="g g-Whitespace">     </span><span class="mi">86</span> 
+<span class="g g-Whitespace">     </span><span class="mi">87</span> <span class="c1">#-----------------------------</span>
+
+<span class="nn">~/miniconda3/envs/JupyEnv/lib/python3.7/site-packages/pulp/pulp.py</span> in <span class="ni">lpSum</span><span class="nt">(vector)</span>
+<span class="g g-Whitespace">   </span><span class="mi">2073</span>     <span class="p">:</span><span class="n">param</span> <span class="n">vector</span><span class="p">:</span> <span class="n">A</span> <span class="nb">list</span> <span class="n">of</span> <span class="n">linear</span> <span class="n">expressions</span>
+<span class="g g-Whitespace">   </span><span class="mi">2074</span>     <span class="s2">&quot;&quot;&quot;</span>
+<span class="ne">-&gt; </span><span class="mi">2075</span><span class="s2">     return LpAffineExpression().addInPlace(vector)</span>
+<span class="g g-Whitespace">   </span><span class="mi">2076</span><span class="s2"> </span>
+<span class="g g-Whitespace">   </span><span class="mi">2077</span><span class="s2"> </span>
+
+<span class="nn">~/miniconda3/envs/JupyEnv/lib/python3.7/site-packages/pulp/pulp.py</span> in <span class="ni">addInPlace</span><span class="nt">(self, other)</span>
+<span class="g g-Whitespace">    </span><span class="mi">763</span><span class="s2">         elif (isinstance(other,list)</span>
+<span class="g g-Whitespace">    </span><span class="mi">764</span><span class="s2">               or isinstance(other, Iterable)):</span>
+<span class="ne">--&gt; </span><span class="mi">765</span><span class="s2">            for e in other:</span>
+<span class="g g-Whitespace">    </span><span class="mi">766</span><span class="s2">                 self.addInPlace(e)</span>
+<span class="g g-Whitespace">    </span><span class="mi">767</span><span class="s2">         else:</span>
+
+<span class="nn">&lt;ipython-input-7-395793aa8ffb&gt;</span> in <span class="ni">&lt;genexpr&gt;</span><span class="nt">(.0)</span>
+<span class="g g-Whitespace">     </span><span class="mi">83</span><span class="s2"> for l in L:</span>
+<span class="g g-Whitespace">     </span><span class="mi">84</span><span class="s2">     if l &lt; len(L):</span>
+<span class="nn">---&gt; 85         prob += lp.lpSum(min([c[j] for j in E[i]]) * x[i, l] for i</span> in <span class="ni">I) &lt;= lp.lpSum(min</span><span class="nt">([c[j] for j in E[i]]) * x[i, l + 1] for i in I)</span>
+<span class="g g-Whitespace">     </span><span class="mi">86</span><span class="s2"> </span>
+<span class="g g-Whitespace">     </span><span class="mi">87</span><span class="s2"> #-----------------------------</span>
+
+<span class="ne">ValueError</span>: min() arg is an empty sequence
 </pre></div>
 </div>
 </div>
@@ -771,7 +867,7 @@ Fecha: 05/05/2021</p>
         
           By Equipo Principios de Optimización<br/>
         
-            &copy; Copyright 2020.<br/>
+            &copy; Copyright 2021.<br/>
       </p>
     </div>
   </footer>
